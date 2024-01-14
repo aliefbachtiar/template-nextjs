@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { product } from "../libs/product";
+import { POST } from "../api/tokenizer/route";
 
 const Checkout = () => {
   const [quantity, setQuantity] = useState(1);
@@ -12,7 +14,19 @@ const Checkout = () => {
   };
 
   const checkout = async () => {
-    alert("Checkout SNAP! 🌟")
+    const data = {
+      id: product.id,
+      productName: product.name,
+      price: product.price,
+      quantity: quantity
+    }
+    const response = await fetch("/api/tokenizer", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+
+    const requestData = await response.json()
+    window.snap.pay(requestData.token)
   };
 
   const generatePaymentLink = async () => {
